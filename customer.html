@@ -2,52 +2,73 @@
 <html>
 <head>
   <title>Laundry Status Check</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: Arial; max-width: 420px; margin: auto; padding: 20px; }
-    input, button { width: 100%; padding: 10px; margin: 8px 0; }
-    .box { border: 1px solid #ccc; padding: 15px; margin-top: 15px; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 420px;
+      margin: auto;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 5px;
+      background: #f2f2f2;
+      text-align: center;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
 
 <h2>Check Laundry Status</h2>
 
-<input type="number" id="orderNo" placeholder="Order No">
+<input type="number" id="orderNo" placeholder="Order Number">
 <input type="text" id="phone" placeholder="Phone Number">
 
 <button onclick="checkStatus()">Check Status</button>
 
-<div id="result" class="box" style="display:none;"></div>
+<div id="result" class="result" style="display:none;"></div>
 
 <script>
 function checkStatus() {
-  var orderNo = document.getElementById("orderNo").value;
-  var phone = document.getElementById("phone").value;
+  var orderNo = document.getElementById("orderNo").value.trim();
+  var phone = document.getElementById("phone").value.trim();
 
   if (!orderNo || !phone) {
-    alert("Please enter Order No and Phone");
+    alert("Please enter Order Number and Phone");
     return;
   }
 
-  var url = "https://script.google.com/macros/s/AKfycbzmGyFP3XyLZWgTqwbYLEaiVBK0VyBeFQY7pPw2LOZubZDpEmp0T3jB75miOflqo5P_/exec"
+  var url = "PASTE_YOUR_WEB_APP_URL_HERE"
     + "?action=check"
     + "&OrderNo=" + encodeURIComponent(orderNo)
     + "&Phone=" + encodeURIComponent(phone);
 
   fetch(url)
-    .then(res => res.text())
-    .then(data => {
+    .then(response => response.text())
+    .then(text => {
       var box = document.getElementById("result");
       box.style.display = "block";
 
-      if (data === "NOTFOUND") {
-        box.innerHTML = "Order not found. Please check details.";
+      if (text === "NOTFOUND") {
+        box.innerHTML = "❌ Order not found. Please check Order No and Phone.";
       } else {
-        box.innerHTML = data;
+        box.innerHTML = text;
       }
     })
     .catch(() => {
-      alert("Connection error. Try again later.");
+      alert("Connection error. Please try again later.");
     });
 }
 </script>
